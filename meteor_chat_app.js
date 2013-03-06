@@ -1,8 +1,21 @@
 var Messages = new Meteor.Collection("messages")
 
 if (Meteor.isClient) {
+
   Template.messages.messages = function(){
-    return Messages.find({}, {sort:{time: -1}})
+    var latitude, longitude;
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(show_pos)
+      }
+      function show_pos(position){
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+      }
+
+
+
+      return Messages.find({}, {$sort : {"time": -1}})
+    
   };
 
 
@@ -29,7 +42,12 @@ if (Meteor.isClient) {
         // console.log(messageContent)
         // TODO: veilig maken op de server
         var time = new Date();
-        Messages.insert({"body" : messageContent, "name" : name, "latitude": latitude, "longitude": longitude, "time": time})
+        Messages.insert({
+          "body" : messageContent, 
+          "name" : name, 
+          "gps": { "latitude": latitude, "longitude": longitude},
+          "time": time
+        })
       }
       
     }
@@ -40,5 +58,9 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
   });
+
+  
+
+  
 
 }
