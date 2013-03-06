@@ -3,11 +3,33 @@
 </head>
 
 <body>
-  {{> hello}}
+  {{loginButtons}}
+  {{> messages}}
+  {{> chatfields}}
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+
+
+<template name="chatfields">
+  <div>
+    <h1>Leave a message</h1>
+    <textarea id="messageContent" placeholder="Enter your message"></textarea>
+    <input type="button" class="button" value="Send" />  
+  </div>
+  
+</template>
+
+
+
+<template name="messages">
+  {{#each messages}}
+    <div>
+      <h1>{{name}}</h1>
+      <time datetime="{{date}}">{{date}}</time>
+      <p>{{body}}</p>
+      <span>{{latitude}}</span>
+      <span>{{longitude}}</span>
+    </div>
+  {{/each}}
+  
 </template>
