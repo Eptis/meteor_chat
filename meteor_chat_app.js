@@ -10,11 +10,26 @@ if (Meteor.isClient) {
       function show_pos(position){
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
+        returnMessages(latitude, longitude)
       }
 
 
 
-      return Messages.find({}, {$sort : {"time": -1}})
+      // return Messages.find({}, {$sort : {"time": -1}})
+      function returnMessages(latitude, longitude){
+        var messages = Messages.find(
+        {
+          gps:
+            {
+              $within : {$circle : [[latitude,longitude], 18000000000]}    
+            }
+        }, 
+        {$sort : {"time": -1}})
+        console.log(messages.fetch())
+        console.log(messages)
+        return messages
+      }
+      
     
   };
 
@@ -38,7 +53,13 @@ if (Meteor.isClient) {
         saveMessage(latitude, longitude, name, messageContent);
       }
       
-      function saveMessage(latitude, longitude, name, messageContent){
+      
+      
+    }
+  });
+
+
+  function saveMessage(latitude, longitude, name, messageContent){
         // console.log(messageContent)
         // TODO: veilig maken op de server
         var time = new Date();
@@ -49,9 +70,6 @@ if (Meteor.isClient) {
           "time": time
         })
       }
-      
-    }
-  });
 }
 
 if (Meteor.isServer) {
