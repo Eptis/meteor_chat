@@ -1,76 +1,116 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,600);
+@import "http://fonts.googleapis.com/css?family=Open+Sans:300,600";
 
 /* CSS declarations go here */
-html, body{
-  font-family: "Open Sans";
+html,body
+{
+  font-family:"Open Sans","Helvetica","Arial",sans-serif;
   font-size:16px;
-  line-height: 1.5;
-  background: #fdfdfd;
-  color: #0c0c0c;
-  padding: 0 1em
+  line-height:1.5;
+  background:#fdfdfd;
+  color:#0c0c0c;
+  padding:0 1em
 }
 
-.hide{
-  opacity:0;
-  /*height: 0;*/
-  /*overflow: hidden;*/
-
-}
-
-.message{
+.message
+{
   padding:1em;
   margin:1em 0;
-  position: relative;
-  background: #eeeeee;
-  -webkit-transition: all 500ms linear;
-  -moz-transition: all 500ms linear;
-  -ms-transition: all 500ms linear;
-  -o-transition: all 500ms linear;
-  transition: all 500ms linear;
+  position:relative;
+  background:#eee;
+  -webkit-transition:all 500ms linear;
+  -moz-transition:all 500ms linear;
+  -ms-transition:all 500ms linear;
+  -o-transition:all 500ms linear;
+  transition:all 500ms linear
 }
 
-.arrow{
-  position: absolute;
-  left: -2em;
-  width: 0; 
-  height: 0; 
-  border-top: 2em solid transparent;
-  border-bottom: 2em solid transparent; 
-  
-  border-right:2em solid #eeeeee; 
+.hide
+{
+  opacity:0;
+  height:0;
+  overflow:hidden;
+  margin:0;
+  padding:0;
+  position:absolute;
+  top:-10000000px
 }
 
+.arrow
+{
+  position:absolute;
+  left:-2em;
+  width:0;
+  height:0;
+  border-top:2em solid transparent;
+  border-bottom:2em solid transparent;
+  border-right:2em solid #eee
+}
 
-.message span, .message time{ font-size:0.7em; color: #414042}
-.message a{ display: block; color:#cc411a; margin-top: 2em; font-size: 0.8em}
+.message span,.message time
+{
+  font-size:.7em;
+  color:#414042
+}
 
-.message p{ color: #0c0c0c; font-size: 1em; margin: 0.5em}
-.message .name{ font-size: 1.2em; color:#2ba9cc; text-transform: uppercase; font-weight: 900;}
-h1, h2, h3{color:#2ba9cc; }
+.message a
+{
+  display:block;
+  color:#cc411a;
+  margin-top:2em;
+  font-size:.8em
+}
 
+.message p
+{
+  color:#0c0c0c;
+  font-size:1em;
+  margin:.5em
+}
 
-.chat{margin-bottom:2em; text-align: right;}
-textarea{
+.message .name
+{
+  font-size:1.2em;
+  color:#2ba9cc;
+  text-transform:uppercase;
+  font-weight:900
+}
+
+h1,h2,h3
+{
+  color:#2ba9cc
+}
+
+.chat
+{
+  margin-bottom:2em;
+  text-align:right
+}
+
+textarea
+{
   width:100%;
   padding:1em;
-  background: #eeeeee;
+  background:#eee;
   min-height:2em;
-  border:none;
+  border:none
 }
 
-textarea:focus{
-  background: #dadada;
+textarea:focus
+{
+  background:#dadada
 }
 
-input[type="button"]{
-  -webkit-appearance: none;
+input[type="button"]
+{
+  -webkit-appearance:none;
   border:none;
-  background: #2ba9cc;
-  color: #fff;
+  background:#2ba9cc;
+  color:#fff;
   padding:1em;
-  display: inline-block;
+  display:inline-block
 }
 
-#login-buttons{
-  float: right
+#login-buttons
+{
+  float:right
 }

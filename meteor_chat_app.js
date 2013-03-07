@@ -29,35 +29,39 @@ Template.messages.rendered = function ( ) {
       function show_pos(position){
         CurPos.latitude = position.coords.latitude;
         CurPos.longitude = position.coords.longitude;
-        // console.log(CurPos)
+        console.log(CurPos)
         calcDist()
       }
 
     
         function calcDist(){
+          if(navigator.geolocation){
+              $(".nogeo").hide()
 
-          $("#messages .message").each(function(){
-            var lat1 = $(this).data("lat") // lat1
-            var lon1 = $(this).data("lon") //lon1
-            var lat2 = CurPos.latitude  // lat2
-            var lon2 = CurPos.longitude // lon2
+            $("#messages .message").each(function(){
+              var lat1 = $(this).data("lat") // lat1
+              var lon1 = $(this).data("lon") //lon1
+              var lat2 = CurPos.latitude  // lat2
+              var lon2 = CurPos.longitude // lon2
 
-            var R = 6371; // km Radius Earth
-            var dLat = (lat2-lat1).toRad();
-            var dLon = (lon2-lon1).toRad();
-            var lat1 = lat1.toRad();
-            var lat2 = lat2.toRad();
+              var R = 6371; // km Radius Earth
+              var dLat = (lat2-lat1).toRad();
+              var dLon = (lon2-lon1).toRad();
+              var lat1 = lat1.toRad();
+              var lat2 = lat2.toRad();
 
-            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            var distance = (R * c)*1000;
+              var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+              var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+              var distance = (R * c)*1000;
 
-            if( distance < range){
-                $(this).removeClass("hide")              
+              if( distance < range){
+                  $(this).removeClass("hide")              
+              }
+            })            
+          }else{
+              $(".nogeo").show()
             }
-            
-          })
               
         }
 
@@ -106,14 +110,20 @@ Template.messages.rendered = function ( ) {
         // TODO: veilig maken op de server
         var time_human = new Date();
         time = Date.parse(time_human)
-        Messages.insert({
-          "body" : messageContent, 
-          "name" : name, 
-          "lon": longitude,
-          "lat": latitude,
-          "time": time,
-          "time_human": time_human
-        })
+
+        if(undefined != latitude && undefined != longitude){
+          Messages.insert({
+            "body" : messageContent, 
+            "name" : name, 
+            "lon": longitude,
+            "lat": latitude,
+            "time": time,
+            "time_human": time_human
+          })
+        }else{
+          alert("Could not save your thought, we had no GeoData")
+        }
+        
       }
 }
 
