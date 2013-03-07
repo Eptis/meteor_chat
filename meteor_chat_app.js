@@ -33,21 +33,7 @@ Template.messages.rendered = function ( ) {
         calcDist()
       }
 
-      function adjustList(){
-          $("#messages .message").each(function(){
-            var objLat = $(this).data("lat")
-            var objLon = $(this).data("lon")
-
-            
-            if( objLat < (CurPos.latitude + range) && objLat > (CurPos.latitude - range)){
-            }else{
-              $(this).fadeOut()              
-            }
-          })
-        }
-
-
-
+    
         function calcDist(){
 
           $("#messages .message").each(function(){
@@ -68,14 +54,17 @@ Template.messages.rendered = function ( ) {
             var distance = (R * c)*1000;
 
             if( distance < range){
-              console.log(distance - range)
-
-              $(this).removeClass("hide")              
+                $(this).removeClass("hide")              
             }
             
           })
               
         }
+
+        setInterval(function(){
+          calcDist();
+        },10000)
+
 
     }
 
@@ -84,7 +73,7 @@ Template.messages.rendered = function ( ) {
   Template.messages.messages = function(){
 
       
-       return Messages.find({}, {sort: {name: 1}});
+       return Messages.find({}, {sort: {"time": -1}});
     
   };
 
@@ -115,13 +104,15 @@ Template.messages.rendered = function ( ) {
   function saveMessage(latitude, longitude, name, messageContent){
         // console.log(messageContent)
         // TODO: veilig maken op de server
-        var time = new Date();
+        var time_human = new Date();
+        time = Date.parse(time_human)
         Messages.insert({
           "body" : messageContent, 
           "name" : name, 
           "lon": longitude,
           "lat": latitude,
-          "time": time
+          "time": time,
+          "time_human": time_human
         })
       }
 }

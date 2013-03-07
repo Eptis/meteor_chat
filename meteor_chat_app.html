@@ -5,8 +5,8 @@
 </head>
 
 <body>
-  <h1>Thoughts</h1>
   {{loginButtons}}
+  <h1>Thoughts</h1>
   {{> chatfields}}
     
   <div id="messages">
@@ -19,25 +19,26 @@
 
 <template name="chatfields">
   {{#if currentUser}}
-  <div>
-    <h1>Whats on your mind?</h1>
-    <textarea id="messageContent" placeholder="Enter your message"></textarea>
+  <div class="chat">
+    <textarea id="messageContent" placeholder="Whats on your mind?"></textarea>
     <input type="button" class="button" value="Send" />  
   </div>
   {{/if}}
-  
 </template>
 
 
 
 <template name="messages">
+  <h3>What others nearby are thinking</h3>
   {{#each messages}}
     <div class="message hide" data-lat="{{lat}}" data-lon="{{lon}}">
-      <h1>{{name}}</h1>
-      <time datetime="{{date}}">{{date}}</time>
-      <p>{{body}}</p>
-      <span>{{lat}}</span>
-      <span>{{lon}}</span>
+      <div class="arrow"></div>
+        <span class="name">{{name}}:</span>
+      <p>
+        {{body}}
+      </p>
+      <a href="http://maps.google.com/maps?q={{lat}},{{lon}}" target="_blank">Open in maps</a>
+      <time datetime="{{time_human}}">{{time_human}}</time>
     </div>
   {{/each}}
   
