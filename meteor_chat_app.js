@@ -1,59 +1,112 @@
 var Messages = new Meteor.Collection("messages")
+var CurPos = {};
+var range = 1000; // in meters
+
+
+
+
+
 
 if (Meteor.isClient) {
 
-  Template.messages.messages = function(){
-    var latitude, longitude;
+
+  /** Converts numeric degrees to radians */
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
+Template.messages.rendered = function ( ) { 
+      getPos();
+
+ }
+
+
+    function getPos(){
       if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(show_pos)
       }
       function show_pos(position){
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        returnMessages(latitude, longitude)
+        CurPos.latitude = position.coords.latitude;
+        CurPos.longitude = position.coords.longitude;
+        // console.log(CurPos)
+        calcDist()
       }
 
+      function adjustList(){
+          $("#messages .message").each(function(){
+            var objLat = $(this).data("lat")
+            var objLon = $(this).data("lon")
 
-
-      // return Messages.find({}, {$sort : {"time": -1}})
-      function returnMessages(latitude, longitude){
-        var messages = Messages.find(
-        {
-          gps:
-            {
-              $within : {$circle : [[latitude,longitude], 18000000000]}    
+            
+            if( objLat < (CurPos.latitude + range) && objLat > (CurPos.latitude - range)){
+            }else{
+              $(this).fadeOut()              
             }
-        }, 
-        {$sort : {"time": -1}})
-        console.log(messages.fetch())
-        console.log(messages)
-        return messages
-      }
+          })
+        }
+
+
+
+        function calcDist(){
+
+          $("#messages .message").each(function(){
+            var lat1 = $(this).data("lat") // lat1
+            var lon1 = $(this).data("lon") //lon1
+            var lat2 = CurPos.latitude  // lat2
+            var lon2 = CurPos.longitude // lon2
+
+            var R = 6371; // km Radius Earth
+            var dLat = (lat2-lat1).toRad();
+            var dLon = (lon2-lon1).toRad();
+            var lat1 = lat1.toRad();
+            var lat2 = lat2.toRad();
+
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var distance = (R * c)*1000;
+
+            if( distance < range){
+              console.log(distance - range)
+
+              $(this).removeClass("hide")              
+            }
+            
+          })
+              
+        }
+
+    }
+
+    getPos();
+
+  Template.messages.messages = function(){
+
       
+       return Messages.find({}, {sort: {name: 1}});
     
   };
 
+ 
+
+
 
   Template.chatfields.events({
-    "click .button" : function(){
-      
-      var latitude, longitude;
-      if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(show_pos)
-      }
-      function show_pos(position){
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+    "click .button" : function(e){
+        e.preventDefault()
 
         var $messageBox = $("#messageContent")
         var messageContent = $messageBox.val()
         var name = Meteor.user().profile.name
         $messageBox.val("");
 
+        var latitude = CurPos.latitude
+        var longitude = CurPos.longitude
+
+
         saveMessage(latitude, longitude, name, messageContent);
-      }
-      
-      
+
       
     }
   });
@@ -66,7 +119,8 @@ if (Meteor.isClient) {
         Messages.insert({
           "body" : messageContent, 
           "name" : name, 
-          "gps": { "latitude": latitude, "longitude": longitude},
+          "lon": longitude,
+          "lat": latitude,
           "time": time
         })
       }
